@@ -1,8 +1,6 @@
-import org.apache.flink.api.common.JobExecutionResult;
-import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+package org.example;
+
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
-import org.apache.flink.connector.kafka.source.KafkaSource;
-import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
@@ -34,7 +32,7 @@ public class Main {
 //        DataStream<String> kafkaDataStream = environment.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka Source");
 
         kafkaDataStream.filter(it -> it.length() > 3).print();
-        //kafkaDataStream.map(Main::mapper).print();
+        //kafkaDataStream.map(org.example.Main::mapper).print();
 
         System.out.println("EXECUTION...4");
         environment.execute();

@@ -1,1 +1,1 @@
-# dist_comp_project
+# distributed_computing_project
