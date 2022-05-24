@@ -3,17 +3,13 @@ version: '3'
 services:
   client:
     build: ./consumer
-#    image: apache/client:1
     image: apache/consumer:1-FLINK-1.12-scala_2.11
-#    image: apache/flink_consumer:1-FLINK-1.14.4-scala_2.12-java11
-#    image: apache/flink-ops-playground:1-FLINK-1.14-scala_2.12-java11
     depends_on:
       - jobmanager
       - kafka
     command: "flink run -c org.example.Main /opt/Consumer.jar"
-    #    command: "flink run -p 3 -d /opt/DeliveryWriteFileJob.jar --bootstrap.servers kafka:9092 --checkpointing --event-time"
-#    volumes:
-#      - ./conf:/opt/flink/conf
+    volumes:
+      - ./conf:/opt/flink/conf
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
   zookeeper:
@@ -34,24 +30,16 @@ services:
     ports:
       - "8081:8081"
     command: jobmanager
-#    command: "jobmanager.sh start-foreground"
-#    volumes:
-#      - ./conf:/opt/flink/conf
+    volumes:
+      - ./conf:/opt/flink/conf
     environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
   taskmanager:
     image: apache/flink:1.12.1-scala_2.11-java8
     depends_on:
       - jobmanager
     command: taskmanager
-#    volumes:
-#      - ./conf:/opt/flink/conf
-#    scale: 1
-#    command: "taskmanager.sh start-foreground"
+    volumes:
+      - ./conf:/opt/flink/conf
     environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 2
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager

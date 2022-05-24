@@ -1,25 +1,32 @@
 package org.example;
 
+import org.apache.flink.api.common.serialization.SimpleStringEncoder;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.connector.file.sink.FileSink;
+import org.apache.flink.core.fs.Path;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.DefaultRollingPolicy;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment environment = StreamExecutionEnvironment.getExecutionEnvironment();
+        environment.disableOperatorChaining();
 
-        // 1.12.1
+//         1.12.1
         Properties kafkaProps = new Properties();
         kafkaProps.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         kafkaProps.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "click-event-count");
         DataStream<String> kafkaDataStream = environment.addSource(new FlinkKafkaConsumer<>("simple_messages", new SimpleStringSchema(), kafkaProps))
                 .name("DeliveryEvent Source");
+
         // 1.14.4
 //        KafkaSource<String> source =
 //                KafkaSource.<String>builder()
@@ -31,15 +38,22 @@ public class Main {
 //                .build();
 //        DataStream<String> kafkaDataStream = environment.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka Source");
 
-        kafkaDataStream.filter(it -> it.length() > 3).print();
-        //kafkaDataStream.map(org.example.Main::mapper).print();
+        System.out.println("EXECUTION...");
 
-        System.out.println("EXECUTION...4");
+        DataStream<String> eventProcessed = kafkaDataStream.map(it -> "MESSAGE SIZE: " + it.length());
+
+        final FileSink<String> sink = FileSink
+                .forRowFormat(new Path("/tmp/flink-output"), new SimpleStringEncoder<String>("UTF-8"))
+                .withRollingPolicy(
+                        DefaultRollingPolicy.builder()
+                                .withRolloverInterval(TimeUnit.SECONDS.toMillis(15))
+                                .withInactivityInterval(TimeUnit.SECONDS.toMillis(5))
+                                .withMaxPartSize(128 * 128 * 128)
+                                .build())
+                .build();
+
+        eventProcessed.sinkTo(sink);
+
         environment.execute();
-    }
-
-    public static String mapper(String input) throws Exception {
-//        Thread.sleep(15000);
-        return "TEXT: " + input;
     }
 }
