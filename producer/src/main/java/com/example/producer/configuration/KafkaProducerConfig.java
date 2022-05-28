@@ -18,7 +18,7 @@ public class KafkaProducerConfig {
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
-        String kafkaServer = "localhost:9092";
+        String kafkaServer = "kafka:9092";
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 kafkaServer);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
