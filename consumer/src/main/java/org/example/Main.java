@@ -6,6 +6,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.example.map.CustomMap;
 
 import java.util.Properties;
 
@@ -35,7 +36,8 @@ public class Main {
 
         System.out.println("EXECUTION...");
 
-        DataStream<String> eventProcessed = kafkaDataStream.map(it -> "MESSAGE SIZE: " + it.length());
+        //DataStream<String> eventProcessed = kafkaDataStream.map(it -> "MESSAGE SIZE: " + it.length());
+        DataStream<String> eventProcessed = kafkaDataStream.map(new CustomMap());
 //
 //        final FileSink<String> sink = FileSink
 //                .forRowFormat(new Path("/tmp/flink-output"), new SimpleStringEncoder<String>("UTF-8"))

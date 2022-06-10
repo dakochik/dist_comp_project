@@ -51,7 +51,7 @@ services:
       - ./tmp/flink-output:/tmp/flink-output
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
-  taskmanager:
+  taskmanager1:
     image: apache/flink:1.12.1-scala_2.11-java8
     depends_on:
       - jobmanager
@@ -63,3 +63,17 @@ services:
       - ./tmp/flink-output:/tmp/flink-output
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - TASK_MANAGER_MEMORY_PROCESS_SIZE=20MB
+  taskmanager2:
+    image: apache/flink:1.12.1-scala_2.11-java8
+    depends_on:
+      - jobmanager
+    command: "taskmanager.sh start-foreground"
+    volumes:
+      - ./conf:/opt/flink/conf
+      - ./tmp/flink-checkpoints-directory:/tmp/flink-checkpoints-directory
+      - ./tmp/flink-savepoints-directory:/tmp/flink-savepoints-directory
+      - ./tmp/flink-output:/tmp/flink-output
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - TASK_MANAGER_MEMORY_PROCESS_SIZE=20MB
