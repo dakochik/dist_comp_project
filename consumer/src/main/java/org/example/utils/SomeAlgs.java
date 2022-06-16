@@ -1,5 +1,7 @@
-package org.example.algs;
+package org.example.utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class SomeAlgs {
@@ -74,6 +76,28 @@ public class SomeAlgs {
         }
 
         return Optional.empty();
+    }
+
+    public static Optional<double[]> strToDArr (String s){
+        String[] sarr = s.split(";");
+        ArrayList<Double> darr = new ArrayList<>();
+        for (String t : sarr){
+            double tmp = 0;
+            try{
+            tmp = Double.parseDouble(t);}
+            catch (NumberFormatException e){
+                continue;
+            }
+            darr.add(tmp);
+        }
+        if (darr.isEmpty()) {
+            return Optional.empty();
+        }
+        double[] res = new double[darr.size()];
+        for (int i = 0; i<darr.size();i++){
+            res[i] = darr.get(i);
+        }
+        return Optional.of(res);
     }
 }
 

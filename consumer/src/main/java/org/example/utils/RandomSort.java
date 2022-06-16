@@ -1,4 +1,4 @@
-package org.example.algs;
+package org.example.utils;
 
 import java.util.Optional;
 

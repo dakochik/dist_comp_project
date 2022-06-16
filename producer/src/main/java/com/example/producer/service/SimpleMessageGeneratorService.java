@@ -17,8 +17,8 @@ public class SimpleMessageGeneratorService extends GeneratorService {
         Supplier supplier = () -> {
             while (started) {
                 try {
-                    // TODO: generate message
-                    String message = "Some message";
+                    //String message = "Some message";
+                    String message = Generator.getRString();
                     template.send("simple_messages", 1L, message);
                     Thread.sleep(delay);
                 } catch (InterruptedException ex) {
@@ -29,4 +29,6 @@ public class SimpleMessageGeneratorService extends GeneratorService {
         };
         startTask(supplier);
     }
+
+
 }

@@ -1,9 +1,6 @@
 package com.example.producer.controller;
 
-import com.example.producer.service.DoubleArrayGeneratorService;
 import com.example.producer.service.GeneratorService;
-import com.example.producer.service.SimpleMessageGeneratorService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -30,6 +30,7 @@ public class KafkaProducerConfig {
     }
 
     //check it
+    /*
     @Bean
     public Map<String, Object> producerDoubleArrayConfigs() {
         Map<String, Object> props = new HashMap<>();
@@ -41,7 +42,7 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 DoubleArraySerializer.class);
         return props;
-    }
+    }*/
 
     @Bean
     public ProducerFactory<Long, String> producerStringFactory() {
@@ -53,7 +54,7 @@ public class KafkaProducerConfig {
         return new KafkaTemplate<>(producerStringFactory());
     }
 
-    @Bean
+  /*  @Bean
     public ProducerFactory<Long, double[]> producerDoubleArrayFactory() {
         return new DefaultKafkaProducerFactory<>(producerDoubleArrayConfigs());
     }
@@ -61,6 +62,6 @@ public class KafkaProducerConfig {
     @Bean
     public KafkaTemplate<Long, double[]> kafkaDoubleArrayTemplate() {
         return new KafkaTemplate<>(producerDoubleArrayFactory());
-    }
+    }*/
 
 }
