@@ -1,6 +1,6 @@
 package com.example.producer.configuration;
 
-import com.example.producer.serializer.DoubleArraySerializer;
+import com.example.producer.utils.DoubleArraySerializer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;

@@ -10,7 +10,7 @@ public class Generator {
         Supplier supplier = () -> {
             while (started) {
                 try {
-   
+
                     double[] array = getRArr();
                     template.send("double_array", 1L, array);
                     Thread.sleep(delay);

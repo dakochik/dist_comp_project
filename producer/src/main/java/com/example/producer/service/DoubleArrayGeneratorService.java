@@ -1,5 +1,6 @@
 package com.example.producer.service;
 
+import com.example.producer.utils.Generator;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 

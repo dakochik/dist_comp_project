@@ -10,14 +10,15 @@ import org.example.utils.SomeAlgs;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class CustomDoubleArrayMap extends RichMapFunction<String, String> {
+public class CustomBubbleMap extends RichMapFunction<String, String> {
     private Meter meter;
 
     @Override
     public String map(String s) {
         meter.markEvent();
         Optional<double[]> res = SomeAlgs.strToDArr(s);
-        if (!res.isPresent()) return null;
+        if (!res.isPresent()) return "null";
+        if (res.get().length<1) return "null";
         return Arrays.stream(SomeAlgs.BubbleSort(res.get().length, res.get()))
                 .mapToObj((double d) -> d +";")
                 .reduce((String s1, String s2) -> s1+s2)

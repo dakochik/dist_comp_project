@@ -1,4 +1,4 @@
-package com.example.producer.service;
+package com.example.producer.utils;
 
 public class Generator {
 /*
