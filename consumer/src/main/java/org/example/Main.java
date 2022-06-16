@@ -1,16 +1,39 @@
 package org.example;
 
+import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.example.map.CustomBogoMap;
+import org.example.map.CustomBubbleMap;
 import org.example.map.CustomMap;
+import org.example.map.CustomReverseMap;
 
 import java.util.Properties;
 
 public class Main {
+
+
+    private static void event(DataStream<String> kafkaDataStream, RichMapFunction<String, String> map){
+        //DataStream<String> eventProcessed = kafkaDataStream.map(it -> "MESSAGE SIZE: " + it.length());
+        DataStream<String> eventProcessed = kafkaDataStream.map(map);
+//
+//        final FileSink<String> sink = FileSink
+//                .forRowFormat(new Path("/tmp/flink-output"), new SimpleStringEncoder<String>("UTF-8"))
+//                .withRollingPolicy(
+//                        DefaultRollingPolicy.builder()
+//                                .withRolloverInterval(TimeUnit.SECONDS.toMillis(15))
+//                                .withInactivityInterval(TimeUnit.SECONDS.toMillis(5))
+//                                .withMaxPartSize(128 * 128 * 128)
+//                                .build())
+//                .build();
+//
+//        eventProcessed.sinkTo(sink);
+        eventProcessed.print();
+    }
 
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment environment = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -35,24 +58,10 @@ public class Main {
 //        DataStream<String> kafkaDataStream = environment.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka Source");
 
         System.out.println("EXECUTION...");
-
-        //DataStream<String> eventProcessed = kafkaDataStream.map(it -> "MESSAGE SIZE: " + it.length());
-        DataStream<String> eventProcessed = kafkaDataStream.map(new CustomMap());
-//
-//        final FileSink<String> sink = FileSink
-//                .forRowFormat(new Path("/tmp/flink-output"), new SimpleStringEncoder<String>("UTF-8"))
-//                .withRollingPolicy(
-//                        DefaultRollingPolicy.builder()
-//                                .withRolloverInterval(TimeUnit.SECONDS.toMillis(15))
-//                                .withInactivityInterval(TimeUnit.SECONDS.toMillis(5))
-//                                .withMaxPartSize(128 * 128 * 128)
-//                                .build())
-//                .build();
-//
-//        eventProcessed.sinkTo(sink);
-
-        eventProcessed.print();
-
+        event(kafkaDataStream, new CustomMap());
+       // event(kafkaDataStream, new CustomReverseMap());
+        //event(kafkaDataStream, new CustomBubbleMap());
+        //event(kafkaDataStream, new CustomBogoMap());
         environment.execute();
     }
 }

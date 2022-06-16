@@ -21,11 +21,7 @@ public class GeneratorService {
     }
 
     public synchronized void startTask() {
-        if (!started) {
-            started = true;
-            future = CompletableFuture.supplyAsync(()->{return null;
-            });
-        }
+        new SimpleMessageGeneratorService(template).startTask();
     }
 
     protected synchronized void startTask(@NotNull java.util.function.Supplier supplier) {

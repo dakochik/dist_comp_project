@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 @Service
 public class SimpleMessageGeneratorService extends GeneratorService {
 
-    public SimpleMessageGeneratorService(@Qualifier("kafkaStringTemplate") KafkaTemplate<Long, String> template) {
+    public SimpleMessageGeneratorService(/*@Qualifier("kafkaStringTemplate")*/ KafkaTemplate<Long, String> template) {
         this.template = template;
     }
 
