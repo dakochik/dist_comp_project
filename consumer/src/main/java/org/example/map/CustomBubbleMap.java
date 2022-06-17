@@ -17,12 +17,8 @@ public class CustomBubbleMap extends RichMapFunction<String, String> {
     public String map(String s) {
         meter.markEvent();
         Optional<double[]> res = SomeAlgs.strToDArr(s);
-        if (!res.isPresent()) return "null";
-        if (res.get().length<1) return "null";
-        return Arrays.stream(SomeAlgs.BubbleSort(res.get().length, res.get()))
-                .mapToObj((double d) -> d +";")
-                .reduce((String s1, String s2) -> s1+s2)
-                .get();
+        if (!res.isPresent()) return null;
+        return Arrays.stream(res.get()).mapToObj(d->d+";").reduce((s1, s2)-> s1+s2).get();
         //return "MESSAGE SIZE: " + s.length();
     }
 

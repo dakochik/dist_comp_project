@@ -16,13 +16,14 @@ public class DoubleArrayGeneratorService extends GeneratorService{
     @Override
     public synchronized void startTask() {
         Supplier supplier = () -> {
+            changeDelay(4L);
             while (started) {
                 try {
                     String array = Arrays.stream(Generator.getRArr())
                             .mapToObj((double d) -> d +";")
                             .reduce((String s1, String s2) -> s1+s2)
                             .get();
-                    template.send("double_array_in_str", 1L, array);
+                    template.send("double_array", 1L, array);
                     Thread.sleep(delay);
                 } catch (InterruptedException ex) {
                     return "Thread was interrupted";

@@ -3,6 +3,7 @@ package com.example.producer.utils;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+@Deprecated
 public class DoubleArraySerializer implements Serializer<double[]> {
 
     @Override

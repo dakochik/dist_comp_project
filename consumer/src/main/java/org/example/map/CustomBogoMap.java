@@ -18,14 +18,11 @@ public class CustomBogoMap extends RichMapFunction<String, String> {
     public String map(String s) {
         meter.markEvent();
         Optional<double[]> res = SomeAlgs.strToDArr(s);
-        if (!res.isPresent()) return "null";
-        if (res.get().length<1) return "null";
+        if (!res.isPresent()) return null;
+        if (res.get().length<1) return null;
         Optional<double[]> tmp = RandomSort.RSort(res.get());
-        if (!tmp.isPresent()) return "null";
-        return Arrays.stream(tmp.get())
-                .mapToObj((double d) -> d +";")
-                .reduce((String s1, String s2) -> s1+s2)
-                .get();
+        if (!tmp.isPresent()) return null;
+        return Arrays.stream(tmp.get()).mapToObj(d->d+";").reduce((s1, s2)-> s1+s2).get();
         //return "MESSAGE SIZE: " + s.length();
     }
 

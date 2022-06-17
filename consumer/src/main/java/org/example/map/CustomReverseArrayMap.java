@@ -9,20 +9,15 @@ import org.example.utils.SomeAlgs;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class CustomReverseMap extends RichMapFunction<String, String> {
+public class CustomReverseArrayMap extends RichMapFunction<String, String> {
     private Meter meter;
 
     @Override
     public String map(String s) {
         meter.markEvent();
         Optional<double[]> res = SomeAlgs.strToDArr(s);
-        if (!res.isPresent()) return "null";
-        if (res.get().length<1) return "null";
-        return Arrays.stream(SomeAlgs.Reverse(res.get().length, res.get()))
-                .mapToObj((double d) -> d +";")
-                .reduce((String s1, String s2) -> s1+s2)
-                .get();
-        //return "MESSAGE SIZE: " + s.length();
+        if (!res.isPresent()) return null;
+        return Arrays.stream(res.get()).mapToObj(d->d+";").reduce((s1, s2)-> s1+s2).get();
     }
 
     @Override
