@@ -1,31 +1,19 @@
 package org.example;
 
-import akka.remote.WireFormats;
-import com.example.producer.configuration.KafkaProducerConfig;
-import com.example.producer.service.DoubleArrayGeneratorService;
-import com.example.producer.service.SimpleMessageGeneratorService;
-import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.RichMapFunction;
-import org.apache.flink.api.common.serialization.SimpleStringEncoder;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
-import org.apache.flink.connector.file.sink.FileSink;
-import org.apache.flink.connector.kafka.source.KafkaSource;
-import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
-import org.apache.flink.core.fs.Path;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.DefaultRollingPolicy;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.example.map.CustomBogoMap;
 import org.example.map.CustomBubbleMap;
 import org.example.map.CustomMap;
 
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 public class Main {
 
@@ -63,14 +51,24 @@ public class Main {
                 .name("DeliveryEvent Source simple messages");
         DataStream<String> kafkaDataStream2 = environment.addSource(new FlinkKafkaConsumer<>("double_array", new SimpleStringSchema(), kafkaProps))
                 .name("DeliveryEvent Source double arrays");
-      /* kafkaDataStream.addSink(
+      event(kafkaDataStream, new CustomMap());
+
+       // event(kafkaDataStream, new CustomReverseMap());
+        //event(kafkaDataStream, new CustomBogoMap());
+        event(kafkaDataStream2, new CustomBubbleMap());
+        event(kafkaDataStream2, new CustomBogoMap());
+
+        environment.execute();
+    }
+}
+ /* kafkaDataStream.addSink(
                 new KafkaSink<>(
                         "simple_messages",
                         new SimpleStringSchema(),
                         kafkaProps)).name("Producer simple messages").setParallelism(2);
 */
-     //   new SimpleMessageGeneratorService(new KafkaProducerConfig().kafkaStringTemplate()).startTask();
-        // 1.14.4
+//   new SimpleMessageGeneratorService(new KafkaProducerConfig().kafkaStringTemplate()).startTask();
+// 1.14.4
        /* KafkaSource<String> source =
                    KafkaSource.<String>builder()
                 .setBootstrapServers("localhost:9092")
@@ -79,16 +77,5 @@ public class Main {
                 .setStartingOffsets(OffsetsInitializer.earliest())
                // .setValueOnlyDeserializer(new SimpleStringSchema())
                 .build();*/
-       // DataStream<String> kafkaDataStream3 = environment.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka Source");
-      event(kafkaDataStream, new CustomMap());
-
-       // event(kafkaDataStream, new CustomReverseMap());
-        //event(kafkaDataStream, new CustomBogoMap());
-        event(kafkaDataStream2, new CustomBubbleMap());
-
-
-      //  new DoubleArrayGeneratorService(new KafkaProducerConfig().kafkaStringTemplate()).startTask();
-
-        environment.execute();
-    }
-}
+// DataStream<String> kafkaDataStream3 = environment.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka Source");
+//  new DoubleArrayGeneratorService(new KafkaProducerConfig().kafkaStringTemplate()).startTask();

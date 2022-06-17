@@ -4,7 +4,6 @@ import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.dropwizard.metrics.DropwizardMeterWrapper;
 import org.apache.flink.metrics.Meter;
-import org.example.utils.Generator;
 import org.example.utils.SomeAlgs;
 
 import java.util.Arrays;
