@@ -54,7 +54,6 @@ public class Main {
       event(kafkaDataStream, new CustomMap());
 
        // event(kafkaDataStream, new CustomReverseMap());
-        //event(kafkaDataStream, new CustomBogoMap());
         event(kafkaDataStream2, new CustomBubbleMap());
         event(kafkaDataStream2, new CustomBogoMap());
 

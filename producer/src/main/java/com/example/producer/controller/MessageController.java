@@ -14,7 +14,6 @@ public class MessageController {
     private final KafkaTemplate template;
     private final GeneratorService generatorService;
 
-    //todo
     public MessageController(KafkaTemplate template, GeneratorService generatorService) {
         this.template = template;
         this.generatorService = generatorService;
