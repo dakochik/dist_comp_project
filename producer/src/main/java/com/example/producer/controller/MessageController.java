@@ -11,21 +11,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/msg")
 public class MessageController {
 
-    private final KafkaTemplate<Long, String> template;
+    private final KafkaTemplate template;
     private final GeneratorService generatorService;
 
-    public MessageController(KafkaTemplate<Long, String> template, GeneratorService generatorService) {
+    public MessageController(KafkaTemplate template, GeneratorService generatorService) {
         this.template = template;
         this.generatorService = generatorService;
     }
 
+   /* public MessageController(@Qualifier("kafkaStringTemplate") KafkaTemplate template, SimpleMessageGeneratorService generatorService) {
+        this.template = template;
+        this.generatorService = generatorService;
+    }
+
+    public MessageController(@Qualifier("kafkaDoubleArrayTemplate") KafkaTemplate template, DoubleArrayGeneratorService generatorService) {
+        this.template = template;
+        this.generatorService = generatorService;
+    }*/
+
     @PostMapping("/send")
-    public void sendMessage(@RequestParam Long messageId, @RequestParam String message) {
-        template.send("simple_messages", messageId, message);
+    public void sendMessage(@RequestParam String topic, @RequestParam Long messageId, @RequestParam String message) {
+        template.send(topic, messageId, message);
     }
 
     @PostMapping("/start")
-    public void startGenerating() {
+    public void startGenerating(){
         generatorService.startTask();
     }
 

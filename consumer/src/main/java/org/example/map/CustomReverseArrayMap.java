@@ -4,18 +4,20 @@ import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.dropwizard.metrics.DropwizardMeterWrapper;
 import org.apache.flink.metrics.Meter;
-import org.example.utils.Generator;
 import org.example.utils.SomeAlgs;
 
-public class CustomMap extends RichMapFunction<String, String> {
+import java.util.Arrays;
+import java.util.Optional;
+
+public class CustomReverseArrayMap extends RichMapFunction<String, String> {
     private Meter meter;
 
     @Override
     public String map(String s) {
         meter.markEvent();
-        String pattern = Generator.getRString((int)Generator.getRNInRange(2,10));
-        return "KMP per "+ pattern+": " + SomeAlgs.KMP(s, pattern);
-        //return "MESSAGE SIZE: " + s.length();
+        Optional<double[]> res = SomeAlgs.strToDArr(s);
+        if (!res.isPresent()) return null;
+        return Arrays.stream(res.get()).mapToObj(d->d+";").reduce((s1, s2)-> s1+s2).get();
     }
 
     @Override

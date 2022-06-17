@@ -1,40 +1,34 @@
 package com.example.producer.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 @Service
 public class GeneratorService {
 
-    private Long delay = 200L;
-    private Boolean started = false;
-    private CompletableFuture<String> future;
+    protected Long delay = 200L;
+    protected Boolean started = false;
+    protected CompletableFuture<String> future;
 
-    private final KafkaTemplate<Long, String> template;
+    protected KafkaTemplate template;
 
+    protected GeneratorService(){}
     public GeneratorService(KafkaTemplate<Long, String> template) {
         this.template = template;
     }
 
     public synchronized void startTask() {
+        new SimpleMessageGeneratorService(template).startTask();
+    }
+
+    protected synchronized void startTask(@NotNull java.util.function.Supplier supplier) {
         if (!started) {
             started = true;
-            future = CompletableFuture.supplyAsync(() -> {
-                        while (started) {
-                            try {
-                                // TODO: generate message
-                                String message = "Some message";
-                                template.send("simple_messages", 1L, message);
-                                Thread.sleep(delay);
-                            } catch (InterruptedException ex) {
-                                return "Thread was interrupted";
-                            }
-                        }
-                        return "Done";
-                    }
-            );
+            future = CompletableFuture.supplyAsync(supplier);
         }
     }
 
